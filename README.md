@@ -8,5 +8,5 @@ HandballStats es una herramienta diseñada para entrenadores, jugadores y analis
 
 ## 📘 Documentación
 
-- [📄 Memoria del Proyecto (PDF)]
+- [📄 Memoria del Proyecto (PDF)] --> https://drive.google.com/file/d/1fTRSTHDxiPEJwkfwXS68BrMTURutoGld/view?usp=sharing
 - [📘 Manual de Usuario (PDF)] --> https://drive.google.com/file/d/1-3APoMtxor3bxm1bWkNlZAoMpL3l_LRn/view?usp=sharing
