@@ -157,7 +157,7 @@ class EquipoActivity: AppCompatActivity() {
                 val nombre = nombreEditText.text.toString()
                 val categoria = categoriaEditText.text.toString()
 
-                if (nombre.isNotEmpty() && categoria.isNotEmpty() && foto.isNotEmpty()) {
+                if (nombre.isNotEmpty() && categoria.isNotEmpty()) {
                     actualizarEquipo(nombre, categoria)
                     dialog.dismiss()
                 } else {

@@ -42,7 +42,7 @@
         android:layout_marginTop="24dp"
         android:contentDescription="Foto del jugador"
         android:scaleType="centerCrop"
-        android:src="@drawable/proffile"
+        android:src="@drawable/proffile_azul"
         app:layout_constraintTop_toBottomOf="@id/backButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
