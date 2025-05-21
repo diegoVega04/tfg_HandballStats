@@ -76,17 +76,17 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
-        android:layout_width="375dp"
+        android:layout_width="0dp"
         android:layout_height="48dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/tab_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/teamCategory"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
         app:tabSelectedTextColor="#8B3FEF"
         app:tabTextColor="@color/texto"
-        app:tabGravity="fill"
-        app:tabMode="fixed" />
+        app:layout_constraintTop_toBottomOf="@id/teamCategory"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"

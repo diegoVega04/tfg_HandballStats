@@ -1,31 +1,42 @@
 package es.diego.handballstats.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import es.diego.handballstats.R
+import es.diego.handballstats.activities.PartidoManager
 import es.diego.handballstats.databinding.CardStatBinding
 import es.diego.handballstats.models.Estadistica
 import es.diego.handballstats.models.EstadisticaAtaque
 import es.diego.handballstats.models.EstadisticaDefensa
 import es.diego.handballstats.models.EstadisticaPortero
 
-class ListaStatsAdapter(private var estadisticas: List<Estadistica>) : RecyclerView.Adapter<ListaStatsAdapter.ViewHolder>() {
+class ListaStatsAdapter(private var estadisticas: MutableList<Estadistica>, private val partido:PartidoManager) : RecyclerView.Adapter<ListaStatsAdapter.ViewHolder>() {
 
     inner class ViewHolder(vista: View) : RecyclerView.ViewHolder(vista) {
         val binding = CardStatBinding.bind(vista)
 
-        fun bind(stat:Estadistica) {
+        fun bind(stat:Estadistica, pos:Int) {
             when(stat){
                 is EstadisticaAtaque -> {
-                    binding.tipoStat.text = stat.tipo.toString()
-                    binding.distancia.text = stat.distancia.toString()
+                    binding.tipoStat.text = "${stat.tipo} min: ${stat.minuto}"
+                    binding.nombreJugador.text = stat.jugador?.nombre.toString()
                 }
 
-                is EstadisticaDefensa -> TODO()
-                is EstadisticaPortero -> TODO()
+                is EstadisticaDefensa -> {
+                    binding.tipoStat.text = "${stat.tipo} min: ${stat.minuto}"
+                    binding.nombreJugador.text = stat.jugador?.nombre.toString()
+                }
+                is EstadisticaPortero -> {
+                    binding.tipoStat.text = "${stat.tipo} min: ${stat.minuto}"
+                    binding.nombreJugador.text = stat.jugador?.nombre.toString()
+                }
+            }
+
+            binding.borrarPartido.setOnClickListener{
+                partido.eliminarEstadistica(pos)
+                actualizarLista(partido.estadisticas.value ?: emptyList())
             }
         }
     }
@@ -38,13 +49,14 @@ class ListaStatsAdapter(private var estadisticas: List<Estadistica>) : RecyclerV
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(estadisticas[position])
+        holder.bind(estadisticas[position], position)
     }
 
     override fun getItemCount(): Int = estadisticas.size
 
     fun actualizarLista(nuevaLista: List<Estadistica>) {
-        estadisticas = nuevaLista
+        estadisticas.clear()
+        estadisticas.addAll(nuevaLista)
         notifyDataSetChanged()
     }
 }

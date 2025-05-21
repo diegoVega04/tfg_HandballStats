@@ -1,7 +1,6 @@
 package es.diego.handballstats.activities
 
 import android.app.Dialog
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +21,7 @@ import androidx.core.view.children
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import es.diego.handballstats.R
@@ -30,7 +30,6 @@ import es.diego.handballstats.databinding.PartidoBinding
 import es.diego.handballstats.fragments.ElegirJugadorFragment
 import es.diego.handballstats.models.Entrenador
 import es.diego.handballstats.models.Equipo
-import es.diego.handballstats.models.Estadistica
 import es.diego.handballstats.models.EstadisticaAtaque
 import es.diego.handballstats.models.EstadisticaDefensa
 import es.diego.handballstats.models.EstadisticaPortero
@@ -118,13 +117,14 @@ class PartidoActivity : AppCompatActivity() {
         partido.golesFavor.observe(this) {gol -> golesFavor.text = gol.toString()}
         partido.golesContra.observe(this) {gol -> golesContra.text = gol.toString()}
 
+        partido.iniciarTemporizador()
+
         btnPlayPause.setOnClickListener{
             if (pausado) {
-                partido.iniciarTemporizador()
                 btnPlayPause.setImageResource(R.drawable.pause)
                 minutero.setTextColor(Color.parseColor("#4CAF50"))
             } else {
-                partido.detenerTemporizador()
+
                 btnPlayPause.setImageResource(R.drawable.play)
                 minutero.setTextColor(Color.parseColor("#F44336"))
             }
@@ -138,7 +138,17 @@ class PartidoActivity : AppCompatActivity() {
                 .setMessage("¿Desea guardar los datos y salir, o salir sin guardar nada?")
                 .setCancelable(true)
                 .setPositiveButton("Guardar y Salir") {_, _ -> acabarPartido()}
-                .setNegativeButton("Salir sin guardar") {_, _ -> onBackPressedDispatcher.onBackPressed()}
+                .setNegativeButton("Salir sin guardar") {_, _ ->
+                    val dialog2 = AlertDialog.Builder(this)
+                        .setTitle("Salir sin guardar")
+                        .setMessage("¿Desea salir sin guardar? Los datos introducidas se perderan para siempre")
+                        .setCancelable(true)
+                        .setPositiveButton("Salir sin guardar") {_, _ -> onBackPressedDispatcher.onBackPressed()}
+                        .setNegativeButton("Cancelar", null)
+                        .create()
+
+                    dialog2.show()
+                }
                 .setNeutralButton("Cancelar", null)
                 .create()
 
@@ -155,7 +165,7 @@ class PartidoActivity : AppCompatActivity() {
         }
 
         //estadisticas-drawer
-        adapter = ListaStatsAdapter(emptyList())
+        adapter = ListaStatsAdapter(mutableListOf(), partido)
         recyclerEstadisticas.adapter = adapter
         partido.estadisticas.observe(this) {lista ->
             adapter.actualizarLista(lista)
@@ -901,13 +911,13 @@ class PartidoActivity : AppCompatActivity() {
                 boton2.setBackgroundColor(ContextCompat.getColor(this, R.color.rojo))
                 boton3.setBackgroundColor(ContextCompat.getColor(this, R.color.rojo))
                 boton4.setBackgroundColor(ContextCompat.getColor(this, R.color.rojo))
-
-                boton5.visibility = View.GONE
+                boton5.setBackgroundColor(ContextCompat.getColor(this, R.color.rojo))
 
                 boton1.text = "SANCION"
                 boton2.text = "PENALTI PROVOCADO"
                 boton3.text = "ROBO FALLADO"
                 boton4.text = "MAL 1v1"
+                boton5.text = "GOL"
 
                 boton1.setOnClickListener{
                     val sancionView = layoutInflater.inflate(R.layout.dialog_sanciones, null)
@@ -979,6 +989,8 @@ class PartidoActivity : AppCompatActivity() {
                     limpiarSeleccionados()
                     mainDialog.dismiss()
                 }
+
+                boton5.setOnClickListener{partido.agregarGolEnContra()}
 
                 mainDialog.show()
             } else {Toast.makeText(this, "No hay ningun jugador seleccionado", Toast.LENGTH_SHORT).show()}
@@ -1151,6 +1163,7 @@ class PartidoActivity : AppCompatActivity() {
         btnDefensaMal = binding.btnDefensaMal
 
         recyclerEstadisticas = binding.recyclerEstadisticas
+        recyclerEstadisticas.layoutManager = LinearLayoutManager(this)
     }
 
     private fun guardarSalir(a: Partido) {
@@ -1226,6 +1239,8 @@ class PartidoActivity : AppCompatActivity() {
                 )
 
                 partido.agregarEstadistica(stat)
+
+                if (tipo == TipoEstadisticaAtaque.GOL) {partido.agregarGolAFavor()}
 
                 if (atacanteSel2 != null && tipo == TipoEstadisticaAtaque.GOL) {
                     val stat2 = EstadisticaAtaque(

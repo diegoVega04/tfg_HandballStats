@@ -41,7 +41,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        android:src="@drawable/proffile_azul"
+        android:src="@drawable/proffile"
         android:contentDescription="Foto del equipo"
         android:layout_marginBottom="16dp" />
 

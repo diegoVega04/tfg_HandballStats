@@ -9,6 +9,7 @@ import es.diego.handballstats.models.Estadistica
 import es.diego.handballstats.models.Jugador
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class PartidoManager : ViewModel() {
@@ -70,16 +71,13 @@ class PartidoManager : ViewModel() {
         if (temporizadorJob?.isActive == true) return
 
         temporizadorJob = viewModelScope.launch {
-            while (!pausado) {
-                delay(1_000)
-                _minutos.value = (_minutos.value ?: 0) + 1
+            while (isActive) {
+                delay(60_000)
+                if (!pausado) {
+                    _minutos.postValue((_minutos.value ?: 0) + 1)
+                }
             }
         }
-    }
-
-    fun detenerTemporizador() {
-        temporizadorJob?.cancel()
-        temporizadorJob = null
     }
 
     // Métodos para actualizar jugadores
@@ -113,6 +111,12 @@ class PartidoManager : ViewModel() {
     fun agregarEstadistica(estadistica: Estadistica) {
         val lista = _estadisticas.value ?: mutableListOf()
         lista.add(0, estadistica)
+        _estadisticas.value = lista
+    }
+
+    fun eliminarEstadistica(pos:Int) {
+        val lista = _estadisticas.value ?: mutableListOf()
+        lista.removeAt(pos)
         _estadisticas.value = lista
     }
 }

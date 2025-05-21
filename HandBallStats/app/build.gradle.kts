@@ -62,8 +62,8 @@ dependencies {
     implementation(libs.retrofit2)
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.glide)
-    kapt(libs.glide.compiler.get())
     implementation(libs.firebase.storage.ktx)
     implementation(libs.firebase.core)
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation(libs.logging.interceptor)
+    implementation(libs.mpandroidchart)
 }

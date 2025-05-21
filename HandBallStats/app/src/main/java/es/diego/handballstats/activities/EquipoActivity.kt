@@ -44,9 +44,12 @@ class EquipoActivity: AppCompatActivity() {
     private lateinit var viewpager: ViewPager2
     private lateinit var addButton: FloatingActionButton
     private lateinit var imagen: ImageView
-    private lateinit var imagenPerfil: ImageView
+    private lateinit var imagenJ: ImageView
+    private lateinit var imagenD: ImageView
     private lateinit var photoPicker: PhotoPickerHelper
+    private lateinit var photoPicker2: PhotoPickerHelper
     private var foto: String = ""
+    private var fotoJugador: String = ""
     private var tipo: String = "jugadores"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,8 +63,16 @@ class EquipoActivity: AppCompatActivity() {
             Glide.with(this)
                 .load(File(path))
                 .circleCrop()
-                .into(imagenPerfil)
+                .into(imagenD)
             foto = path
+        }
+
+        photoPicker2 = PhotoPickerHelper(this) { bitmap, path ->
+            Glide.with(this)
+                .load(File(path))
+                .circleCrop()
+                .into(imagenJ)
+            fotoJugador = path
         }
 
         nombre = miBinding.teamName
@@ -84,6 +95,7 @@ class EquipoActivity: AppCompatActivity() {
 
             val nombreEditText = dialogView.findViewById<EditText>(R.id.teamNameEditText)
             val categoriaEditText = dialogView.findViewById<EditText>(R.id.teamCategoryEditText)
+            imagenD = dialogView.findViewById<ImageView>(R.id.teamPhotoImageView)
             val guardarButton = dialogView.findViewById<Button>(R.id.saveTeamButton)
             val eliminarButton = dialogView.findViewById<ImageButton>(R.id.eliminarButton)
 
@@ -91,6 +103,30 @@ class EquipoActivity: AppCompatActivity() {
             nombreEditText.text = Editable.Factory.getInstance().newEditable(Sesion.equipo!!.nombre)
             categoriaEditText.text = Editable.Factory.getInstance().newEditable(Sesion.equipo!!.categoria)
             eliminarButton.visibility = View.VISIBLE
+
+            if (!Sesion.equipo?.foto.isNullOrEmpty()) {
+                val fotoPath = Sesion.equipo!!.foto!!
+                val fotoFile = File(fotoPath)
+                if (fotoFile.exists()) {
+                    Glide.with(this)
+                        .load(fotoFile)
+                        .circleCrop()
+                        .into(imagenD)
+                }
+            }
+
+            imagenD.setOnClickListener{
+                val opciones = arrayOf("Elegir desde galería", "Tomar foto con cámara")
+                AlertDialog.Builder(this)
+                    .setTitle("Cambiar foto del equipo")
+                    .setItems(opciones) { _, which ->
+                        when (which) {
+                            0 -> photoPicker.pickFromGallery()
+                            1 -> photoPicker.takePhoto()
+                        }
+                    }
+                    .show()
+            }
 
             eliminarButton.setOnClickListener(){
                 val dialog = AlertDialog.Builder(this)
@@ -121,7 +157,7 @@ class EquipoActivity: AppCompatActivity() {
                 val nombre = nombreEditText.text.toString()
                 val categoria = categoriaEditText.text.toString()
 
-                if (nombre.isNotEmpty() && categoria.isNotEmpty()) {
+                if (nombre.isNotEmpty() && categoria.isNotEmpty() && foto.isNotEmpty()) {
                     actualizarEquipo(nombre, categoria)
                     dialog.dismiss()
                 } else {
@@ -187,16 +223,16 @@ class EquipoActivity: AppCompatActivity() {
         val anioEditText = dialogView.findViewById<EditText>(R.id.playerBirthYearEditText)
         val dorsal = dialogView.findViewById<EditText>(R.id.playerDorsalEditText)
         val guardarButton = dialogView.findViewById<Button>(R.id.savePlayerButton)
-        imagenPerfil = dialogView.findViewById<ImageView>(R.id.playerPhotoImageView)
+        imagenJ = dialogView.findViewById<ImageView>(R.id.playerPhotoImageView)
 
-        imagenPerfil.setOnClickListener{
+        imagenJ.setOnClickListener{
             val opciones = arrayOf("Elegir desde galería", "Tomar foto con cámara")
             AlertDialog.Builder(this)
                 .setTitle("Cambiar foto de perfil")
                 .setItems(opciones) { _, which ->
                     when (which) {
-                        0 -> photoPicker.pickFromGallery()
-                        1 -> photoPicker.takePhoto()
+                        0 -> photoPicker2.pickFromGallery()
+                        1 -> photoPicker2.takePhoto()
                     }
                 }
                 .show()
@@ -211,7 +247,7 @@ class EquipoActivity: AppCompatActivity() {
                 //creo estos objetos para evitar errores de bucles en la serializacion a la hora de hacer el insert en la BD
                 val c: Entrenador = Entrenador(Sesion.user!!.id, "", null, Sesion.user!!.email, "", null)
                 val b: Equipo = Equipo(Sesion.equipo!!.id, "", "", null, c)
-                val jugador: Jugador = Jugador(null, false, nombre, dorsal.toString().toInt(), foto, anio.toString().toInt(), b)
+                val jugador: Jugador = Jugador(null, false, nombre, dorsal.toString().toInt(), fotoJugador, anio.toString().toInt(), b)
 
                 lifecycleScope.launch {
                     try {
@@ -274,6 +310,7 @@ class EquipoActivity: AppCompatActivity() {
         Sesion.user!!.equipos.remove(Sesion.equipo)
         Sesion.equipo!!.nombre = nombre
         Sesion.equipo!!.categoria = categoria
+        Sesion.equipo!!.foto = foto
 
         lifecycleScope.launch {
             try {
