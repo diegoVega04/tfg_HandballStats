@@ -11,9 +11,9 @@ import java.util.List;
 @Repository
 public interface EstadisticaRepository extends JpaRepository<Estadistica, Integer> {
 
-    @Query("SELECT a FROM EstadisticaAtaque a WHERE a.jugador.id = :id")
+    @Query("SELECT a FROM Estadistica a WHERE a.jugador.id = :id")
     List<Estadistica> findByJugador(int id);
 
-    @Query("SELECT a FROM EstadisticaAtaque a WHERE a.jugador.equipo.id = :id")
+    @Query("SELECT a FROM Estadistica a WHERE a.jugador.equipo.id = :id")
     List<Estadistica> findByEquipo (int id);
 }

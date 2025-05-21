@@ -33,18 +33,26 @@
 
         <activity
             android:name=".activities.LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.InicioActivity" />
-        <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.PerfilActivity" />
-        <activity android:name=".activities.EquipoActivity" />
-        <activity android:name=".activities.PartidoActivity" />
+        <activity android:name=".activities.InicioActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.RegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.PerfilActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.EquipoActivity"
+            android:screenOrientation="portrait"/>
+            />
+        <activity android:name=".activities.PartidoActivity"
+            android:screenOrientation="portrait"/>
+            />
         <activity android:name=".activities.JugadorActivity" />
     </application>
 

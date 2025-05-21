@@ -1,6 +1,8 @@
 package es.diego.handballstats.fragments
 
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -93,6 +95,7 @@ class AtaqueFragment : Fragment() {
         binding?.pieChart1?.data = data
         binding?.pieChart1?.description?.isEnabled = false
         binding?.pieChart1?.centerText = "Goles por posición"
+        binding?.pieChart1?.setEntryLabelColor(Color.BLACK)
         binding?.pieChart1?.animateY(1000)
         binding?.pieChart1?.invalidate()
     }
@@ -121,6 +124,7 @@ class AtaqueFragment : Fragment() {
         binding?.pieChart2?.description?.isEnabled = false
         binding?.pieChart2?.centerText = "Goles por distancia"
         binding?.pieChart2?.animateY(1000)
+        binding?.pieChart2?.setEntryLabelColor(Color.BLACK)
         binding?.pieChart2?.invalidate()
     }
 

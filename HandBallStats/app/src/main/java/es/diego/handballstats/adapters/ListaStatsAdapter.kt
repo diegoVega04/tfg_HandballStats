@@ -11,6 +11,7 @@ import es.diego.handballstats.models.Estadistica
 import es.diego.handballstats.models.EstadisticaAtaque
 import es.diego.handballstats.models.EstadisticaDefensa
 import es.diego.handballstats.models.EstadisticaPortero
+import es.diego.handballstats.models.enums.TipoEstadisticaAtaque
 
 class ListaStatsAdapter(private var estadisticas: MutableList<Estadistica>, private val partido:PartidoManager) : RecyclerView.Adapter<ListaStatsAdapter.ViewHolder>() {
 
@@ -35,6 +36,9 @@ class ListaStatsAdapter(private var estadisticas: MutableList<Estadistica>, priv
             }
 
             binding.borrarPartido.setOnClickListener{
+                if (stat is EstadisticaAtaque && stat.tipo == TipoEstadisticaAtaque.GOL) {
+                    partido.restarGolAFavor()
+                }
                 partido.eliminarEstadistica(pos)
                 actualizarLista(partido.estadisticas.value ?: emptyList())
             }

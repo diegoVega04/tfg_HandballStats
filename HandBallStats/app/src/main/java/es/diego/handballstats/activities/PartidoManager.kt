@@ -72,7 +72,7 @@ class PartidoManager : ViewModel() {
 
         temporizadorJob = viewModelScope.launch {
             while (isActive) {
-                delay(60_000)
+                delay(1_000)
                 if (!pausado) {
                     _minutos.postValue((_minutos.value ?: 0) + 1)
                 }
@@ -103,8 +103,16 @@ class PartidoManager : ViewModel() {
         _golesFavor.value = (_golesFavor.value ?: 0) + 1
     }
 
+    fun restarGolAFavor() {
+        _golesFavor.value = (_golesFavor.value ?: 0) - 1
+    }
+
     fun agregarGolEnContra() {
         _golesContra.value = (_golesContra.value ?: 0) + 1
+    }
+
+    fun restarGolEnContra() {
+        _golesContra.value = (_golesContra.value ?: 0) - 1
     }
 
     // Añadir una estadística

@@ -36,9 +36,8 @@
                 android:scaleType="centerCrop"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
-                android:src="@drawable/icon_stats"
-                android:background="?android:selectableItemBackgroundBorderless"
-                app:tint="@color/acciones" />
+                android:src="@drawable/logo_icon"
+                android:background="?android:selectableItemBackgroundBorderless"/>
 
             <TextView
                 android:id="@+id/goles_favor"
@@ -75,7 +74,7 @@
                 android:id="@+id/minutero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="15dp"
                 android:text="00"
                 android:textSize="22sp"
                 android:textColor="#F44336"/>
@@ -95,7 +94,7 @@
                 android:id="@+id/btn_stop"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="15dp"
                 android:scaleType="centerCrop"
                 app:tint="#F44336"
                 android:src="@drawable/stop"

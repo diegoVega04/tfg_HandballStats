@@ -990,7 +990,10 @@ class PartidoActivity : AppCompatActivity() {
                     mainDialog.dismiss()
                 }
 
-                boton5.setOnClickListener{partido.agregarGolEnContra()}
+                boton5.setOnClickListener{
+                    partido.agregarGolEnContra()
+                    mainDialog.dismiss()
+                }
 
                 mainDialog.show()
             } else {Toast.makeText(this, "No hay ningun jugador seleccionado", Toast.LENGTH_SHORT).show()}
@@ -1091,6 +1094,7 @@ class PartidoActivity : AppCompatActivity() {
             } else {
                 partido.setJugador(pos, jugadorSeleccionado)
             }
+            limpiarSeleccionados()
         }
 
         dialog.show(supportFragmentManager, "SeleccionarJugadorDialog")

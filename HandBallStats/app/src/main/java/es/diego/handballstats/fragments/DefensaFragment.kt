@@ -2,6 +2,7 @@ package es.diego.handballstats.fragments
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,7 @@ import es.diego.handballstats.models.enums.TipoEstadisticaDefensa
 import es.diego.handballstats.services.Sesion
 
 class DefensaFragment: Fragment() {
-    private lateinit var binding: FragmentDefensaBinding
+    private var binding: FragmentDefensaBinding? = null
     private val stats: List<EstadisticaDefensa> = Sesion.statsDefensa
 
     override fun onCreateView(
@@ -25,14 +26,14 @@ class DefensaFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDefensaBinding.inflate(inflater, container, false)
-        return binding.root
+        return binding?.root!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val partidos = partidosUnicos()
-        binding.tvPartidosDefensa.text = "Datos recaudados en $partidos partidos"
+        binding?.tvPartidosDefensa?.text = "Datos recaudados en $partidos partidos"
 
         val robos = stats.count { it.tipo == TipoEstadisticaDefensa.ROBO }
         val blocajes = stats.count { it.tipo == TipoEstadisticaDefensa.BLOCAJE }
@@ -44,13 +45,13 @@ class DefensaFragment: Fragment() {
         val totalUxU = uxuBuenos.size + uxuMalos.size
         val porcentajeUxU = if (totalUxU > 0) (uxuBuenos.size * 100 / totalUxU) else 0
 
-        binding.tvRobosValue.text = (robos / partidos.toFloat()).toStringFormatted()
-        binding.tvBlocajesValue.text = (blocajes / partidos.toFloat()).toStringFormatted()
-        binding.tvPenaltisValue.text = (penaltis / partidos.toFloat()).toStringFormatted()
-        binding.tvPorcentajeUxUValue.text = "$porcentajeUxU%"
+        binding?.tvRobosValue?.text = (robos / partidos.toFloat()).toStringFormatted()
+        binding?.tvBlocajesValue?.text = (blocajes / partidos.toFloat()).toStringFormatted()
+        binding?.tvPenaltisValue?.text = (penaltis / partidos.toFloat()).toStringFormatted()
+        binding?.tvPorcentajeUxUValue?.text = "$porcentajeUxU%"
 
-        cargarGraficoPorPosicion(binding.pieChartUxUBuenos, uxuBuenos, "UxU Buenos")
-        cargarGraficoPorPosicion(binding.pieChartUxUMalos, uxuMalos, "UxU Malos")
+        cargarGraficoPorPosicion(binding?.pieChartUxUBuenos!!, uxuBuenos, "1vs1 Buenos")
+        cargarGraficoPorPosicion(binding?.pieChartUxUMalos!!, uxuMalos, "1vs1 Malos")
     }
 
     private fun partidosUnicos(): Int {
@@ -68,12 +69,15 @@ class DefensaFragment: Fragment() {
 
         val dataSet = PieDataSet(entries, titulo)
         dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
+        dataSet.valueTextSize = 14f
         val data = PieData(dataSet)
 
         chart.data = data
+        chart.centerText = titulo
         chart.description.isEnabled = false
         chart.setUsePercentValues(true)
         chart.setEntryLabelColor(Color.BLACK)
+        chart.animateY(1000)
         chart.invalidate()
     }
 }
